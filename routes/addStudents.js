@@ -33,9 +33,10 @@ router.get('/getAllStudents', (req, res) => {
     })
 });
 // UPDATE BY BODY ID
-router.patch('/update', (req, res) => {
+router.put('/update/:id', (req, res) => {
+    let id = req.params.id
     let student = req.body;
-    var query5 = "update student set name=?,lastName=?,age=?,address=?,nationality=? where id=?";
+    var query5 = "update student set name=?,lastName=?,age=?,address=?,nationality=? where id=" + id;
     connection.query(query5,
         [student.name,
         student.lastName,
@@ -82,6 +83,23 @@ router.delete('/delete', (req, res) => {
     connection.query(query7, (err, result) => {
         if (!err) {
             return res.status(200).json({ message: "data is deleted", result })
+        }
+        else {
+            return res.status(500).json(err)
+        }
+    })
+})
+// GET STUDENT BY ID  
+router.get('/getById/:id', (req, res) => {
+    let id = req.params.id
+    var query = "select * from student where id=" + id;
+    // connection.query(query, (err, result) => {
+    //     if (err) throw err;
+    //     res.send(result)
+    // })
+    connection.query(query, (err, result) => {
+        if (!err) {
+            return res.status(200).json({ msg: "success", result })
         }
         else {
             return res.status(500).json(err)
